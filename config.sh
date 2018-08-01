@@ -1,6 +1,5 @@
 #!/bin/bash
-# VERY IMPORTANT
-set -o errexit -o pipefail -o nounset 
+set -o errexit -o pipefail -o nounset # VERY IMPORTANT
 #DEBUG=true
 
 # First BTRFS source path settings
@@ -21,3 +20,9 @@ ROLLBACK_SNAPSHOT="$ROOTFS/rootfs_rollback"
 zencefil_disk="usb-WD_Elements_10A8_575833314536335946303730-0:0"
 zencefil_luks_uuid="5494c36d-0ecf-44ac-843a-adf9e0e12ea1"
 zencefil_mnt="/mnt/zencefil"
+
+# Heybe
+# ---------------------------------------------
+heybe_disk="wwn-0x5000c5009ce12c7d"
+heybe_luks_uuid="d78e239f-1693-454e-8de0-233c5800fdac"
+heybe_mnt="/mnt/heybe"

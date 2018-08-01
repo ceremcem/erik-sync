@@ -1,42 +1,23 @@
 #!/bin/bash
-
+# VERY IMPORTANT
+set -o errexit -o pipefail -o nounset 
 #DEBUG=true
 
 # First BTRFS source path settings
-SRC1="/mnt/masa"
-SRC1_SNAP="$SRC1/snapshots"
-SRC1_SUB1="rootfs"
+ROOTFS="/mnt/masa"
+ROOTFS_SNAP="$ROOTFS/snapshots"
+ROOTFS_LIVE="rootfs"
 
 # Second BTRFS source path settings
-SRC2="/mnt/masa"
-SRC2_SNAP="$SRC2/snapshots"
-SRC2_SUB1="cca-heybe"
+HEYBE_SNAP="$ROOTFS/snapshots"
+HEYBE_LIVE="cca-heybe"
 
 # Rollback location.
-ROLLBACK_SNAPSHOT="$SRC1/rootfs_rollback"
+ROLLBACK_SNAPSHOT="$ROOTFS/rootfs_rollback"
 
+# Zencefil
+# ---------------------------------------------
 # Local USB target disk settings (/dev/disk/by-id/$KNOWN_DISK)
-KNOWN_DISK="usb-WD_Elements_10A8_575833314536335946303730-0:0"
-
-# Local USB target path settings
-ROOT_NAME="zencefil" # The volume group name
-SWAP_PART="/dev/$ROOT_NAME/swap"
-ROOT_PART="/dev/$ROOT_NAME/root"
-ROOT_MOUNT_POINT="/mnt/${ROOT_NAME}"
-D_DEVICE="${ROOT_NAME}_crypt"  # decrypted device name
-D_DEVICE_PATH="/dev/mapper/$D_DEVICE"
-DEST="$ROOT_MOUNT_POINT"
-BACKUP_MEDIA="/mnt/$ROOT_NAME"
-
-# DEPRECATING!!!
-DEST_SNAP="$DEST/snapshots"
-# /DEPRECATIG
-
-SNAP_CONTAINER="snapshots"
-
-# SSH target settings
-DEST_SSH_SNAP="/mnt/aea3/snapshots"
-SSH="ssh://aea3"
-
-# TODO: ADD: Physical disk transport settings
-# ...
+zencefil_disk="usb-WD_Elements_10A8_575833314536335946303730-0:0"
+zencefil_luks_uuid="5494c36d-0ecf-44ac-843a-adf9e0e12ea1"
+zencefil_mnt="/mnt/zencefil"

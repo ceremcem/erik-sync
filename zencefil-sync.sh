@@ -14,8 +14,8 @@ require_being_btrfs_subvolume $DEST_SSH_SNAP
 echo_green "Started sync-physical"
 
 SNAP_ROOT="$BACKUP_MEDIA/$SNAP_CONTAINER"
-send_all_snapshots "$SNAP_ROOT/$SRC1_SUB1" "$DEST_SSH_SNAP/$SRC1_SUB1"
-show_timer "sync of $SRC1_SNAP completed in"
+send_all_snapshots "$SNAP_ROOT/$ROOTFS_LIVE" "$DEST_SSH_SNAP/$ROOTFS_LIVE"
+show_timer "sync of $ROOTFS_SNAP completed in"
 
-send_all_snapshots "$SNAP_ROOT/$SRC2_SUB1" "$DEST_SSH_SNAP/$SRC2_SUB1"
+send_all_snapshots "$SNAP_ROOT/$HEYBE_LIVE" "$DEST_SSH_SNAP/$HEYBE_LIVE"
 show_timer "Synchronization finished in"

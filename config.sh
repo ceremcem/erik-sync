@@ -12,7 +12,6 @@ SRC2="/mnt/masa"
 SRC2_SNAP="$SRC2/snapshots"
 SRC2_SUB1="cca-heybe"
 
-
 # Rollback location.
 ROLLBACK_SNAPSHOT="$SRC1/rootfs_rollback"
 

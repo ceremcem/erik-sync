@@ -7,7 +7,7 @@ safe_source () { source $1; set_dir; }
 
 
 safe_source $DIR/config.sh
-safe_source $DIR/../common.sh
+safe_source $DIR//common.sh
 
 FORCE_FLAG=$1
 

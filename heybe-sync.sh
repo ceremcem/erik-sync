@@ -27,7 +27,7 @@ require_different_disks () {
 get_subvol_list(){
     btrfs sub list -R -u -r "$1"
 }
-find_common_sub(){
+find_sent_subs(){
     local s=$1  # source
     local d=$2  # destination
     get_subvol_list $(mount_point_of $s) | while read -r ssub; do
@@ -91,6 +91,11 @@ get_snapshot_roots(){
         echo $out
     done
 }
+find_missing_subs(){
+    local src=$1
+    local dst=$2
+    comm -23 <( list_subvol_below $src ) <( find_sent_subs $src $dst )
+}
 
 #-------------------------------------------------------------
 
@@ -110,29 +115,34 @@ require_different_disks $s $d
 src_mnt=$(mount_point_of $s)
 dst_mnt=$(mount_point_of $d)
 
-echo "snap roots:"
+
 for _snap_root in $(get_snapshot_roots $s); do
     snap_root=${_snap_root#$src_mnt/}
     echo "Syncing $snap_root"
-    list_subvol_below $src_mnt/$snap_root
-    echo "-----------         ------------"
-    echo "the subvolumes that are already sent:"
-    find_common_sub "$src_mnt/$snap_root" "$dst_mnt/$snap_root"
-    echo "--------------------------------"
+    echo "------------------------------"
+
+    # echo "--- the subvolumes to be synced: ---"
+    #list_subvol_below $src_mnt/$snap_root
+    #echo "--- the subvolumes that are already sent: ---"
+    #find_sent_subs "$src_mnt/$snap_root" "$dst_mnt/$snap_root"
+    for missing in `find_missing_subs "$src_mnt/$snap_root" "$dst_mnt/$snap_root"`; do
+        echo "missing subvol: $missing"
+    done
+    echo "=================================="
 done
 
 exit
 
 echo "common subvols"
-find_common_sub $s $d
-latest_common=`find_common_sub $s $d | sort | head`
+find_sent_subs $s $d
+latest_common=`find_sent_subs $s $d | sort | head`
 echo "found latest common: $latest_common"
 
 
 exit
 
 echo "machines to sync:"
-common=$(find_common_sub $s $d)
+common=$(find_sent_subs $s $d)
 find_machines $s | while read -r machine; do
     echo "=== $machine ==="
     set +ue

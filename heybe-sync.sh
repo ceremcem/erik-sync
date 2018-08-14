@@ -30,11 +30,11 @@ get_subvol_list(){
 find_common_sub(){
     local s=$1  # source
     local d=$2  # destination
-    get_subvol_list $s | while read -r ssub; do
+    get_subvol_list $(mount_point_of $s) | while read -r ssub; do
         s_rcv=`echo $ssub | get_line_field received_uuid`
         s_id=`echo $ssub | get_line_field uuid`
         s_path=`echo $ssub | get_line_field path`
-        get_subvol_list $d | while read -r dsub; do
+        get_subvol_list $(mount_point_of $d) | while read -r dsub; do
             d_rcv=`echo $dsub | get_line_field received_uuid`
             d_id=`echo $dsub | get_line_field uuid`
             d_path=`echo $dsub | get_line_field path`
@@ -47,7 +47,6 @@ find_common_sub(){
                 if [[ $src_subvol = $s/* ]]; then
                     echo $src_subvol
                 fi
-
             fi
         done
         #echo $ssub

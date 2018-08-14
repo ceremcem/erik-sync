@@ -1,7 +1,3 @@
-#!/bin/bash
-set -o errexit -o pipefail -o nounset # VERY IMPORTANT
-#DEBUG=true
-
 # First BTRFS source path settings
 ROOTFS="/mnt/masa"
 ROOTFS_SNAP="$ROOTFS/snapshots"

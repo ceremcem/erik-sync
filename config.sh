@@ -1,10 +1,10 @@
 # First BTRFS source path settings
 ROOTFS="/mnt/masa"
-ROOTFS_SNAP="$ROOTFS/snapshots"
+ROOTFS_SNAP="$ROOTFS/snapshots/erik"
 ROOTFS_LIVE="rootfs"
 
 # Second BTRFS source path settings
-HEYBE_SNAP="$ROOTFS/snapshots"
+HEYBE_SNAP="$ROOTFS/snapshots/erik"
 HEYBE_LIVE="cca-heybe"
 
 # Rollback location.

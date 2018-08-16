@@ -5,4 +5,6 @@ safe_source () { [[ ! -z ${1:-} ]] && source $1; _dir="$(cd "$(dirname "${BASH_S
 
 safe_source $_dir/config.sh
 
+$_dir/heybe-attach.sh
 $_dir/smith-sync/sync $ROOTFS_SNAP $heybe_mnt/snapshots
+$_dir/heybe-detach.sh

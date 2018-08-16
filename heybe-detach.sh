@@ -8,7 +8,6 @@ safe_source $_dir/config.sh
 
 [[ $(whoami) = "root" ]] || { sudo $0 $*; exit 0; }
 
-echo "unmounting $heybe_mnt"
 umount_if_mounted $heybe_mnt
 unencrypted_part="/dev/mapper/heybe"
 

@@ -18,5 +18,4 @@ To take a snapshot manually:
 
 This should be done every day or more often:
 
-        ./heybe-attach.sh
-        ./heybe-sync.sh
+        heybe-sync.sh

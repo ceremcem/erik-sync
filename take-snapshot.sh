@@ -17,13 +17,13 @@ safe_source $_dir/config.sh
 
 [[ $(whoami) = "root" ]] || { sudo $0 $*; exit 0; }
 
-# check if rollback_snapshot is mounted or not, because we don't want
-# to delete a mounted snapshot
-require_not_mounted $ROLLBACK_SNAPSHOT
 start_timer
 
 # Remove if rollback snapshot is present
 if is_btrfs_subvolume $ROLLBACK_SNAPSHOT; then
+    # check if rollback_snapshot is mounted or not, because we don't want
+    # to delete a mounted snapshot
+    require_not_mounted $ROLLBACK_SNAPSHOT
     echo "Removing current rollback snapshot ($ROLLBACK_SNAPSHOT)"
     btrfs sub delete $ROLLBACK_SNAPSHOT
 else

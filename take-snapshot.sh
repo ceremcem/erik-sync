@@ -21,8 +21,15 @@ safe_source $_dir/config.sh
 # to delete a mounted snapshot
 require_not_mounted $ROLLBACK_SNAPSHOT
 start_timer
-echo "Removing current rollback snapshot ($ROLLBACK_SNAPSHOT)"
-btrfs sub delete $ROLLBACK_SNAPSHOT
+
+# Remove if rollback snapshot is present
+if is_btrfs_subvolume $ROLLBACK_SNAPSHOT; then
+    echo "Removing current rollback snapshot ($ROLLBACK_SNAPSHOT)"
+    btrfs sub delete $ROLLBACK_SNAPSHOT
+else
+    echo_yellow "No rollback snapshot found."
+fi
+
 echo_green "Snapshotting current rootfs as rollback ($ROLLBACK_SNAPSHOT)"
 btrfs sub snap / $ROLLBACK_SNAPSHOT
 show_timer "Current rootfs is now in rollback location."

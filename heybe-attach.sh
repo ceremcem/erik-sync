@@ -12,7 +12,11 @@ name="heybe"
 disk=$(get_device_by_id $heybe_disk)
 crypt_part=$(get_device_by_uuid $heybe_luks_uuid)
 
-echo "...checking if $heybe_mnt is mounted"
+echo "...mounting $heybe_mnt"
+if mountpoint $heybe_mnt; then
+    echo "...seems already mounted."
+    exit 0
+fi
 require_not_mounted $heybe_mnt
 mkdir -p $heybe_mnt
 

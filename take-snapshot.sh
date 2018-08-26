@@ -58,7 +58,7 @@ while :; do
             dry_run=true
             ;;
         # --------------------------------------------------------
-        --*)
+        -*)
             echo
             echo "Unknown option: $1"
             show_help

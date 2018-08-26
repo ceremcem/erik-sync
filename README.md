@@ -25,3 +25,7 @@ To take a snapshot manually:
 This should be done every day or more often:
 
         heybe-sync.sh
+
+# To skip 'mycontainer' backup
+
+        sudo touch /var/lib/lxc/mycontainer/do-not-backup

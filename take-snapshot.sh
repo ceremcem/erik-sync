@@ -102,6 +102,10 @@ check_dry_run take_snapshot "$ROOTFS/$HEYBE_LIVE" "$ROOTFS_SNAP/$HEYBE_LIVE/$HEY
 for vm in /var/lib/lxc/*; do
     [[ -d "$vm" ]] || continue
     vm_name=$(basename $vm)
+    if [[ -e "$vm/do-not-backup" ]]; then
+        echo_yellow "$vm_name won't be backed up due to 'do-not-backup' flag"
+        continue
+    fi
     echo "...Found vm: $vm_name"
     dst="$ROOTFS/snapshots/$vm_name"
     check_dry_run mkdir -p $dst

@@ -1,6 +1,18 @@
 #!/bin/bash
 set -eu
-[[ $ALL_CHECKS_DONE = true ]] || { echo "You should source this file..."; exit; }
+#[[ $ALL_CHECKS_DONE = true ]] || { echo "You should source this file..."; exit; }
+
+DEVICE=$1      # /dev/sdc
+ROOT_NAME=$2   # zeytin
+
+echo "FIXME: Very fragile, fix this"
+exit # this exit is to prevent errors due to fragile command line argument handling
+
+
+D_DEVICE=${ROOT_NAME}_crypt
+
+SWAP_PART="/dev/mapper/${ROOT_NAME}-swap"
+ROOT_PART="/dev/mapper/${ROOT_NAME}-root"
 
 echo "Creating partition table on ${DEVICE}..."
 # to create the partitions programatically (rather than manually)
@@ -36,7 +48,7 @@ mkfs.ext2 "${DEVICE}1"
 echo "Creating LUKS layer on ${DEVICE}2..."
 cryptsetup -y -v luksFormat "${DEVICE}2"
 
-decrypt_crypted_partition
+cryptsetup open "${DEVICE}2" $D_DEVICE
 
 echo "Creating LVM partitions"
 pvcreate "/dev/mapper/$D_DEVICE" || echo_err "physical volume exists.."
@@ -49,3 +61,6 @@ mkswap $SWAP_PART
 mkfs.btrfs $ROOT_PART
 
 echo "done..."
+
+
+

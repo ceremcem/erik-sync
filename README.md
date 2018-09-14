@@ -1,6 +1,6 @@
-# Description 
-
 ![erik-sync-screenshot](https://user-images.githubusercontent.com/6639874/45538780-a6123a00-b810-11e8-8225-fa2969e0a6ae.png)
+
+# Description 
 
 This is the sync toolset I'm using for backing up my laptop. 
 

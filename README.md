@@ -2,7 +2,7 @@
 
 # Description 
 
-This is the sync toolset I'm using for backing up my laptop. 
+This is the backup toolset I'm currently using on my laptop. 
 
 ## Automatic Snapshots
 

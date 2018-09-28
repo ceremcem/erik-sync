@@ -1,8 +1,8 @@
+![erik-sync-screenshot](https://user-images.githubusercontent.com/6639874/45538780-a6123a00-b810-11e8-8225-fa2969e0a6ae.png)
+
 # Description 
 
-![screenshot](https://user-images.githubusercontent.com/6639874/44114354-8f6ae384-a013-11e8-94cd-44799fc5e38c.png)
-
-This is the sync toolset I'm using for backing up my laptop. 
+This is the backup toolset I'm currently using on my laptop. 
 
 ## Automatic Snapshots
 

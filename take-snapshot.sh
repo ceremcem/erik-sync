@@ -105,6 +105,9 @@ for vm in /var/lib/lxc/*; do
     if [[ -e "$vm/do-not-backup" ]]; then
         echo_yellow "$vm_name won't be backed up due to 'do-not-backup' flag"
         continue
+    elif ! is_btrfs_subvolume $vm/rootfs; then
+        echo_yellow "$vm_name is not using a btrfs subvolume"
+        continue
     fi
     echo "...Found vm: $vm_name"
     dst="$ROOTFS/snapshots/$vm_name"

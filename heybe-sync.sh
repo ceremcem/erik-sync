@@ -10,6 +10,7 @@ safe_source $_dir/smith-sync/lib/all.sh
 # ---------------------------
 # Initialize parameters
 postpone=false
+periodic=false
 dry_run=
 # ---------------------------
 args=("$@")
@@ -26,6 +27,9 @@ while :; do
             postpone=true
             run_at=$1
             shift
+            ;;
+        --periodic) shift
+            periodic=true
             ;;
         --dry-run)
             dry_run=$1
@@ -63,5 +67,19 @@ if [[ $postpone = true ]]; then
     sleep $diff_sec
 fi
 
+# backup the boot partition
+echo "backing up /boot partition"
+require_mounted $heybe_boot_mnt
+rsync -aP --delete /boot/ $heybe_boot_mnt/
+echo "replacing crypt_part uuid's"
+# default cryptopts=source=UUID=YOUR_DISK_UUID_HERE,target=masa_crypt,lvm=masa-root
+sed -i "s/cryptopts=.*\b/cryptopts=source=UUID=$heybe_luks_uuid,target=heybe_crypt /g" $heybe_boot_mnt/grub/grub.cfg
+
+echo_yellow "# FIXME: there is no swap in heybe, add one!"
 
 $_dir/smith-sync/btrfs-sync $ROOTFS/snapshots $heybe_mnt/snapshots ${dry_run:-}
+
+if [[ $periodic = true ]]; then
+    echo "Periodic run is set: "
+    $0 "$@"
+fi

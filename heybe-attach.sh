@@ -6,7 +6,7 @@ safe_source () { [[ ! -z ${1:-} ]] && source $1; _dir="$(cd "$(dirname "${BASH_S
 safe_source $_dir/smith-sync/lib/all.sh
 safe_source $_dir/config.sh
 
-[[ $(whoami) = "root" ]] || { sudo $0 $*; exit 0; }
+[[ $(whoami) = "root" ]] || { sudo $0 "$@"; exit 0; }
 
 name="heybe"
 disk=$(get_device_by_id $heybe_disk)
@@ -27,3 +27,15 @@ cryptsetup open $crypt_part $name
 # mount the root LVM
 mount_unless_mounted ${unencrypted_part} $heybe_mnt
 echo_green "Successfully mounted on $heybe_mnt"
+
+echo "...mounting $heybe_boot_mnt"
+if mountpoint $heybe_boot_mnt; then
+    echo "...seems already mounted."
+    exit 0
+fi
+require_not_mounted $heybe_boot_mnt
+mkdir -p $heybe_boot_mnt
+
+boot_part=$(get_device_by_uuid $heybe_boot_uuid)
+mount $boot_part $heybe_boot_mnt
+echo_green "Successfully mounted on $heybe_boot_mnt"

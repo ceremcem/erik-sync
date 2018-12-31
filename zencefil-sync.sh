@@ -4,5 +4,22 @@ safe_source () { [[ ! -z ${1:-} ]] && source $1; _dir="$(cd "$(dirname "${BASH_S
 # end of bash boilerplate
 
 safe_source $_dir/config.sh
+safe_source $_dir/smith-sync/lib/all.sh
 
-$_dir/smith-sync/btrfs-sync $ROOTFS/snapshots $zencefil_mnt/snapshots "$@"
+# All checks are done, run as root.
+[[ $(whoami) = "root" ]] || { sudo $0 "$@"; exit 0; }
+
+machine="erik"
+for b in rootfs cca-heybe; do
+    src=$(get-latest-folder "$ROOTFS/snapshots/$machine/$b")
+    src_name="$(basename $src)"
+    echo_green "Backing up $src_name"
+    dest="$zencefil_mnt/sync/$machine/$b"
+    snap_name="$zencefil_mnt/snapshots/$machine/$b/$src_name"
+    if [[ -e "$snap_name" ]]; then
+        echo_yellow "Skipping $src_name because it's already snapshotted"
+        continue
+    fi
+    $_sdir/smith-sync/rsync.sh -u "$src/" "$dest/"
+    [[ $? -eq 0 ]] && btrfs sub snap -r "$dest" "$snap_name"
+done

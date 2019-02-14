@@ -94,6 +94,9 @@ show_timer "Current rootfs is now in rollback location."
 echo_green "Backing up /boot partition"
 check_dry_run rsync -avrP /boot/ /boot.backup/
 
+echo_green "Backing up chromium config"
+check_dry_run rsync -avrP /home/ceremcem/.config/chromium/ /home/ceremcem/.config/chromium.backup
+
 POSTFIX=$(get_timestamp)
 echo_green "Taking Snapshots with $POSTFIX postfix..."
 check_dry_run take_snapshot "$ROOTFS/$ROOTFS_LIVE" "$ROOTFS_SNAP/$ROOTFS_LIVE/$ROOTFS_LIVE.$POSTFIX"

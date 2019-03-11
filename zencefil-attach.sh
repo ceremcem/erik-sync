@@ -19,8 +19,12 @@ mkdir -p $zencefil_mnt
 unencrypted_part=/dev/mapper/$name
 echo "...decrypting $crypt_part"
 cryptsetup open $crypt_part $name
-sleep 2 # to let lvm to be activated
-lvscan
+while :; do
+    DEV="/dev/$name"
+    echo "...waiting $DEV to become ACTIVE."
+    lvscan | grep /dev/$name | grep ACTIVE > /dev/null && break
+    sleep 0.5
+done
 
 # mount the root LVM
 mount_unless_mounted ${unencrypted_part}-root $zencefil_mnt

@@ -57,6 +57,16 @@ while :; do
         --dry-run) shift
             dry_run=true
             ;;
+        --with-skip-option) shift
+            if prompt_yes_no "Take a backup first? (You SHOULD)"; then
+                # Answered "yes"
+                echo_green "OK, backing up"
+            else
+                # Answered "no"
+                echo_yellow "Skipping backup!"
+                exit 0
+            fi
+            ;;
         # --------------------------------------------------------
         -*)
             echo
@@ -70,6 +80,7 @@ while :; do
     [[ -z ${1:-} ]] && break
 done; set -- "${args[@]}"
 # use $_arg1 in place of $1, $_arg2 in place of $2 and so on, "$@" is intact
+
 
 # All checks are done, run as root.
 [[ $(whoami) = "root" ]] || { sudo $0 "$@"; exit 0; }

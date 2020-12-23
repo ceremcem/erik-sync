@@ -5,4 +5,6 @@ safe_source () { [[ ! -z ${1:-} ]] && source $1; _dir="$(cd "$(dirname "${BASH_S
 [[ $(whoami) = "root" ]] || { sudo $0 "$@"; exit 0; }
 
 cd $_sdir
-./multistrap-helpers/install-to-disk/detach-disk.sh zencefil-config.sh
+./multistrap-helpers/install-to-disk/detach-disk.sh masa-config.sh
+. masa-config.sh
+sudo hdparm -Y /dev/disk/by-id/$wwn

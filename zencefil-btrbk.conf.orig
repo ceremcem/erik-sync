@@ -1,0 +1,15 @@
+timestamp_format        long
+
+snapshot_preserve_min   2d
+snapshot_preserve      14d
+
+
+target_preserve_min    5h
+target_preserve        20d 10w *m
+
+snapshot_dir           snapshots/erik3
+snapshot_create        no
+
+volume /mnt/heybe-root
+    target /mnt/zencefil-root/snapshots/erik3
+    subvolume rootfs

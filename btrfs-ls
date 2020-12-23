@@ -1,0 +1,11 @@
+#!/bin/bash
+safe_source () { [[ ! -z ${1:-} ]] && source $1; _dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"; _sdir=$(dirname "$(readlink -f "$0")"); }; safe_source
+
+sudo $_sdir/btrbk ls "$@" | tail -n+2 | awk '{print $4}' | sort -r | while read i; do
+    if [[ $1 =~ ^.*/$ ]] && [[ $i/ =~ ^$1$ ]]; then
+        continue
+        #echo "skipping $i"
+    else
+        echo $i
+    fi
+done

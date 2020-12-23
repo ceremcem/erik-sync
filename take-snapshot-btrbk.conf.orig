@@ -1,0 +1,13 @@
+timestamp_format        long
+
+snapshot_preserve_min   2d
+snapshot_preserve      14d
+
+target_preserve_min    5h
+target_preserve        20d 10w *m
+
+snapshot_dir           snapshots/erik3
+
+volume /mnt/heybe-root
+  subvolume rootfs
+

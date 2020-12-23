@@ -1,3 +1,9 @@
 [submodule "smith-sync"]
 	path = smith-sync
 	url = https://github.com/ceremcem/smith-sync
+[submodule "multistrap-helpers"]
+	path = multistrap-helpers
+	url = https://github.com/ceremcem/multistrap-helpers
+[submodule "scrub"]
+	path = scrub
+	url = ./scrub/

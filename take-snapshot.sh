@@ -67,4 +67,5 @@ conf=take-snapshot-btrbk.conf
 ./gen-config.sh $conf.orig > $conf
 
 sudo ./btrbk -c $conf --progress $action
-
+[[ "$action" == "run" ]] && \
+    echo $EPOCHSECONDS > /tmp/take-snapshot.last-run.txt

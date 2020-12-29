@@ -1,10 +1,8 @@
-![erik-sync-screenshot](https://user-images.githubusercontent.com/6639874/45538780-a6123a00-b810-11e8-8225-fa2969e0a6ae.png)
-
 # Description 
 
 This is the backup toolset I'm currently using on my laptop. 
 
-## Automatic Snapshots
+## Automatic Snapshots (Prior to apt-get install)
 
 Snapshots are automatically taken on every `apt-get install` command:
 
@@ -20,12 +18,23 @@ To take a snapshot manually:
 
     take-snapshot.sh
 
-# Send snapshots to first external disk
+# Send snapshots to first external disk (masa)
 
 This should be done every day or more often:
 
-        heybe-sync.sh
+        masa-auto.sh
 
-# To skip 'mycontainer' backup
+# Exclude list
 
-        sudo touch /var/lib/lxc/mycontainer/do-not-backup
+Subvolumes with name of `tmp` are not backed up. 
+
+
+# Scrub 
+
+A `scrub start` job is explicitly triggered by a `weekly` scheduled `systemd` service. See ./scrub. 
+
+Any interrupted scrubs are continued `on-idle`, see `~/startup.service`.
+
+# Plug-n-backup
+
+Backups are started upon plugging the disk named `zencefil`. This is controlled via `zencefil-auto.sh --poll` script. See `~/startup.service`. 

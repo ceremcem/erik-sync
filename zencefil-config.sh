@@ -1,4 +1,4 @@
-wwn="ata-WDC_WD10JMVW-11AJGS1_WD-WX31E63YF070"
+wwn="usb-WD_Elements_10A8_575833314536335946303730-0:0"
 lvm_name="zencefil"
 
 # use ./get-disk-info.sh to identify the UUID's:

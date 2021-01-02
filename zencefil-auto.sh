@@ -24,8 +24,10 @@ while sleep 1; do
         if [[ "$processed" = false ]]; then
             notify-send "Backing up to zencefil."
             t0=$EPOCHSECONDS
+            ./take-snapshot.sh
             ./zencefil-attach.sh
             time ./zencefil-backup.sh
+            ./zencefil-assemble-bootable.sh --refresh --full
             ./zencefil-detach.sh
             t1=$EPOCHSECONDS
             notify-send -u critical "Backup of zencefil has ended." \

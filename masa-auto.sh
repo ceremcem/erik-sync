@@ -30,6 +30,7 @@ notify-send "Backing up to $hd."
 t0=$EPOCHSECONDS
 ./$hd-attach.sh
 time ./$hd-backup.sh
+./$hd-assemble-bootable.sh --refresh --full
 #./$hd-detach.sh
 t1=$EPOCHSECONDS
 notify-send -u critical "Backup of $hd has ended." \

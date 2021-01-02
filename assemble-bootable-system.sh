@@ -1,11 +1,6 @@
 #!/bin/bash
 set -eu
 
-root_mnt="/mnt/masa-root"
-src="$root_mnt/snapshots/erik3/"
-dest="$root_mnt/rootfs"
-conf="./masa-config.sh"
-
 die(){
     echo "$@"
     exit 1
@@ -15,10 +10,14 @@ die(){
 show_help(){
     cat <<HELP
 
-    $(basename $0) 
+    $(basename $0) [options] -c path/to/config-file --from path/to/snapshots-root [--to path/to/dest]
+
     Options:
         --full           : Make a full installation (including Grub install)
         --refresh        : Delete old rootfs recursively, create it from the latest backups
+        -c, --config     : Config file 
+        --from           : Path to snapshots root. Relative to \$root_mnt or full path.
+        --to             : Destination folder. \$root_mnt/\$subvol is used if omitted. 
 
 HELP
     exit
@@ -29,6 +28,9 @@ HELP
 # Initialize parameters
 full=false
 refresh=false
+config=
+src=
+dest=
 # ---------------------------
 args_backup=("$@")
 args=()
@@ -48,6 +50,15 @@ while [ $# -gt 0 ]; do
         --refresh)
             refresh=true
             ;;
+        -c|--config) shift
+            config=${1:-}
+            ;;
+        --from) shift
+            src=${1:-}
+            ;;
+        --to) shift 
+            dest=${1:-}
+            ;;
         # --------------------------------------------------------
         -*) # Handle unrecognized options
             die "Unknown option: $1"
@@ -66,14 +77,25 @@ done; set -- "${args_backup[@]}"
 # "$@" is in the original state,
 # use ${args[@]} for new positional arguments
 
-[[ $(whoami) = "root" ]] || die "This script must be run as root."
+[[ -z $config ]] && die "Config file is required."
+source $config
 
-source $conf
+[[ -z $src ]] && die "Source of snapshots is required."
+[[ -d $root_mnt/$src ]] && src=$root_mnt/$src # relative path is used. 
+
+[[ -z $dest ]] && dest="$root_mnt/$subvol"
+echo "Using $dest as destination."
+
+[[ $(whoami) = "root" ]] || die "This script must be run as root."
 
 mountpoint $root_mnt > /dev/null || ./masa-attach.sh
 [[ $refresh = true ]] && ./btrfs-ls $dest | xargs btrfs sub del 
-[[ -d $dest ]] || ./assemble-backups.sh $src $dest
-./multistrap-helpers/install-to-disk/generate-scripts.sh $conf -o $dest --update
+if [[ -d $dest ]]; then
+    echo "Using existing $dest snapshot."
+else
+    ./assemble-backups.sh $src $dest
+fi
+./multistrap-helpers/install-to-disk/generate-scripts.sh $config -o $dest --update
 
 if $full; then
     if [[ -d $dest/boot.backup ]]; then
@@ -82,10 +104,10 @@ if $full; then
         rsync -a --delete $dest/boot.backup/ $dest/boot/
         umount $boot_part
     fi
-    ./multistrap-helpers/install-to-disk/chroot-to-disk.sh $conf "./2-install-grub.sh; exit;"
+    ./multistrap-helpers/install-to-disk/chroot-to-disk.sh $config "./2-install-grub.sh; exit;"
 else 
     echo "INFO: Skipping Grub re-installation."
 fi
 echo
 echo "All done."
-echo "Test with VirtualBox (after completely detaching masa)"
+echo "Test with VirtualBox (Don't forget to unmount $root_mnt)"

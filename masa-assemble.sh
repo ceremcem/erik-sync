@@ -3,7 +3,7 @@ set -eu
 
 root_mnt="/mnt/masa-root"
 src="$root_mnt/snapshots/erik3/"
-dest="$root_mnt/rootfs/"
+dest="$root_mnt/rootfs"
 conf="./masa-config.sh"
 
 die(){
@@ -18,6 +18,7 @@ show_help(){
     $(basename $0) 
     Options:
         --full           : Make a full installation (including Grub install)
+        --refresh        : Delete old rootfs recursively, create it from the latest backups
 
 HELP
     exit
@@ -27,6 +28,7 @@ HELP
 # ---------------------------
 # Initialize parameters
 full=false
+refresh=false
 # ---------------------------
 args_backup=("$@")
 args=()
@@ -42,6 +44,9 @@ while [ $# -gt 0 ]; do
         --full)
             # install Grub, etc.
             full=true
+            ;;
+        --refresh)
+            refresh=true
             ;;
         # --------------------------------------------------------
         -*) # Handle unrecognized options
@@ -63,23 +68,23 @@ done; set -- "${args_backup[@]}"
 
 [[ $(whoami) = "root" ]] || die "This script must be run as root."
 
-mountpoint $root_mnt || ./masa-attach.sh
+source $conf
+
+mountpoint $root_mnt > /dev/null || ./masa-attach.sh
+[[ $refresh = true ]] && ./btrfs-ls $dest | xargs btrfs sub del 
 [[ -d $dest ]] || ./assemble-backups.sh $src $dest
-[[ $full = true ]] && tmp="/mnt/masa-assembly.tmp" || tmp=$dest
-if $full; then
-    [[ -d $tmp ]] && die "$tmp exists, not continuing."
-    mkdir $tmp # create temporary directory for assembly: https://unix.stackexchange.com/q/558604/65781
-    mount /dev/mapper/masa-root $tmp -o rw,subvol=rootfs
-    mount UUID=7f7b9b8e-a773-4d4e-b448-ee194fd58a0f $tmp/boot
-    rsync -avP --delete /boot/ $tmp/boot/
-fi
-./multistrap-helpers/install-to-disk/generate-scripts.sh -o $tmp $conf --update
+./multistrap-helpers/install-to-disk/generate-scripts.sh $conf -o $dest --update
 
 if $full; then
-    ./multistrap-helpers/do-chroot.sh $tmp "./2-install-grub.sh; exit;"
-    umount $tmp/boot
-    umount $tmp
-    rmdir $tmp
+    if [[ -d $dest/boot.backup ]]; then
+        echo "Copying contents of \$dest/boot.backup/ to \$dest/boot/"
+        mount $boot_part $dest/boot
+        rsync -a --delete $dest/boot.backup/ $dest/boot/
+        umount $boot_part
+    fi
+    ./multistrap-helpers/install-to-disk/chroot-to-disk.sh $conf "./2-install-grub.sh; exit;"
+else 
+    echo "INFO: Skipping Grub re-installation."
 fi
 echo
 echo "All done."

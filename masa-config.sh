@@ -16,5 +16,4 @@ subvol=${subvol:-rootfs}
 root_dev=/dev/mapper/${root_lvm}
 swap_dev=/dev/mapper/${swap_lvm}
 root_mnt="/mnt/$root_lvm"
-rootfs_mnt="${root_mnt}-${subvol}"
 

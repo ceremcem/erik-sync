@@ -11,4 +11,4 @@ while sleep $s; do
     sudo ./btrbk -c $conf clean && break
 done
 
-sudo ./btrbk -c $conf --progress ${1:-run}
+sudo ./btrbk -c $conf --progress ${1:-run} || echo "Exit code is: $?"

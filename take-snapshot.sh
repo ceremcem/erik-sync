@@ -62,6 +62,10 @@ done; set -- "${args[@]}"
 # All checks are done, run as root.
 [[ $(whoami) = "root" ]] || { sudo $0 $relaunch_args; exit 0; }
 
+
+# backup boot partition contents 
+rsync -avP /boot/ /boot.backup/
+
 cd $_sdir
 conf=take-snapshot-btrbk.conf
 ./gen-config.sh $conf.orig > $conf

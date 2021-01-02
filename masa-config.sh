@@ -9,7 +9,12 @@ crypt_key="/home/ceremcem/.ssh/luks-keys/masa-key-1"
 
 # you probably won't need to change those:
 crypt_dev_name=${lvm_name}_crypt
-root_dev=/dev/mapper/${lvm_name}-root
+root_lvm=${lvm_name}-root
+swap_lvm=${lvm_name}-swap
 subvol=${subvol:-rootfs}
-root_mnt="/mnt/$(basename $root_dev)"
+
+root_dev=/dev/mapper/${root_lvm}
+swap_dev=/dev/mapper/${swap_lvm}
+root_mnt="/mnt/$root_lvm"
 rootfs_mnt="${root_mnt}-${subvol}"
+

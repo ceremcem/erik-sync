@@ -1,4 +1,5 @@
 #!/bin/bash
+_sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 set -eu
 
 config=${1:-}
@@ -25,10 +26,6 @@ EOL
 
 errcho(){ >&2 echo -e "$@"; }
 
-btrfs_ls(){
-    sudo ./btrbk ls "$1" | tail -n+2 | awk '{print $4}' | sort -r
-}
-
 # Print the original config
 cat $config
 echo
@@ -49,7 +46,7 @@ target=${target:-}
 
 exclude_list=("tmp")
 
-btrfs_ls "$src" | while read sub; do
+$_sdir/btrfs-ls --only-rw "$src" | while read sub; do
     [[ "$(basename $sub)" == "tmp" ]] && {  errcho "Skipping $sub..."; continue; }
     rel=$(readlink -m "${sub#${src%/}}")
     new_snapshot_dir=$(readlink -m $dest/$(dirname $rel))

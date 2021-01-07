@@ -7,3 +7,9 @@
 [submodule "scrub"]
 	path = scrub
 	url = ./scrub/
+[submodule "on-idle"]
+	path = on-idle
+	url = https://github.com/ceremcem/on-idle
+[submodule "service-runner"]
+	path = service-runner
+	url = https://github.com/aktos-io/service-runner

@@ -1,7 +1,7 @@
 #!/bin/bash
 _sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-. $_sdir/smith-sync/lib/basic-functions.sh
+. $_sdir/../../smith-sync/lib/basic-functions.sh
 
 # show help
 show_help(){
@@ -67,9 +67,9 @@ done; set -- "${args[@]}"
 rsync -avP /boot/ /boot.backup/
 
 cd $_sdir
-conf=take-snapshot-btrbk.conf
-./gen-config.sh $conf.orig > $conf
+conf="btrbk.conf"
+../../smith-sync/btrbk-gen-config $conf > $conf.calculated
 
-sudo ./btrbk -c $conf --progress $action
+sudo ../../smith-sync/btrbk -c $conf.calculated --progress $action
 [[ "$action" == "run" ]] && \
     echo $EPOCHSECONDS > /tmp/take-snapshot.last-run.txt

@@ -11,11 +11,11 @@
 #[[ $(whoami) = "root" ]] || { sudo $0 "$@"; exit 0; }
 #cd $_sdir
 
-source zencefil-config.sh
+source config.sh
 echo "Started monitoring zencefil."
 while sleep 1; do 
     while sleep 1; do test -b /dev/disk/by-id/$wwn || break; done;
     echo "Waiting for zencefil to attach..."
     while sleep 1; do test -b /dev/disk/by-id/$wwn && break; done;
-    ./zencefil-auto.sh
+    ./auto.sh
 done

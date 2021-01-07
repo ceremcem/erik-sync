@@ -2,39 +2,35 @@
 
 This is the backup toolset I'm currently using on my laptop. 
 
-## Automatic Snapshots (Prior to apt-get install)
+# Install 
 
-Snapshots are automatically taken on every `apt-get install` command:
-
-`/etc/apt/apt.conf.d/70smith-sync`:
-```bash
-// create a btrfs snapshot before (un)installing packages
-Dpkg::Pre-Invoke {"/home/ceremcem/.sbin/erik-sync/take-snapshot.sh --with-skip-option";};
+```
+git submodule update --init --recursive
+./targets/rootfs/install-apt-hook.sh
+(cd ./on-idle && make)
+hash tmux || sudo apt-get install tmux 
 ```
 
-## Manual Snapshots
+# Manual Snapshots
 
 To take a snapshot manually:
 
-    take-snapshot.sh
+    ./targets/rootfs/take-snapshot.sh
 
-# Send snapshots to first external disk (masa)
+# Run all services at once
 
-This should be done every day or more often:
-
-        masa-auto.sh
+    ./startup.service
 
 # Exclude list
 
 Subvolumes with name of `tmp` are not backed up. 
 
+See ./smith-sync/btrbk-gen-config: exclude_list
 
-# Scrub 
+# Scrubbing
 
 A `scrub start` job is explicitly triggered by a `weekly` scheduled `systemd` service. See ./scrub. 
 
-Any interrupted scrubs are continued `on-idle`, see `~/startup.service`.
-
 # Plug-n-backup
 
-Backups are started upon plugging the disk named `zencefil`. This is controlled via `zencefil-auto.sh --poll` script. See `~/startup.service`. 
+Backups are started upon plugging the disk named `zencefil`. This is controlled via `zencefil/poll.sh` script, run by `./startup.service`. 

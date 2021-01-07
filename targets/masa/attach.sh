@@ -5,4 +5,8 @@ safe_source () { [[ ! -z ${1:-} ]] && source $1; _dir="$(cd "$(dirname "${BASH_S
 [[ $(whoami) = "root" ]] || { sudo $0 "$@"; exit 0; }
 
 cd $_sdir
-./multistrap-helpers/install-to-disk/attach-disk.sh masa-config.sh
+s=0
+while sleep $s; do
+    s=3
+    ../../smith-sync/multistrap-helpers/install-to-disk/attach-disk.sh config.sh && break
+done

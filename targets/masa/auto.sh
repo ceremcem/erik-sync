@@ -3,15 +3,18 @@ _sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 [[ $(whoami) = "root" ]] || { sudo $0 "$@"; exit 0; }
 set -eu
 
+hd="masa"
+
 tflag="/tmp/take-snapshot.last-run.txt" # timestamp file
-_flag="/tmp/masa-auto.last-run.txt"
+_flag="/tmp/$hd-auto.last-run.txt"
 
 [[ -f $tflag ]] || echo 0 > $tflag
 [[ -f $_flag ]] || echo 0 > $_flag
 if [[ "$(cat $_flag)" -lt "$(cat $tflag)" ]]; then
-    notify-send "$(basename $0)' last run is stale."
+    notify-send "${hd}'s last run is stale."
 else
     echo "Not running as it should be already backed up."
+    echo "(remove $_flag to force)"
     exit 0
 fi
 
@@ -25,7 +28,6 @@ on_kill(){
 trap -- on_kill SIGTERM SIGHUP SIGINT
 
 cd $_sdir
-hd="masa"
 notify-send "Backing up to $hd."
 t0=$EPOCHSECONDS
 ./attach.sh

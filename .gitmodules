@@ -6,7 +6,7 @@
 	url = https://github.com/ceremcem/multistrap-helpers
 [submodule "scrub"]
 	path = scrub
-	url = ./scrub/
+	url = https://github.com/ceremcem/monitor-btrfs-disk
 [submodule "on-idle"]
 	path = on-idle
 	url = https://github.com/ceremcem/on-idle

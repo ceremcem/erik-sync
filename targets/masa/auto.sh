@@ -8,13 +8,13 @@ hd="masa"
 tflag="/tmp/take-snapshot.last-run.txt" # timestamp file
 _flag="/tmp/$hd-auto.last-run.txt"
 
+[[ "${1:-}" == "--force" ]] && rm "$_flag"
 [[ -f $tflag ]] || echo 0 > $tflag
 [[ -f $_flag ]] || echo 0 > $_flag
 if [[ "$(cat $_flag)" -lt "$(cat $tflag)" ]]; then
     notify-send "${hd}'s last run is stale."
 else
-    echo "Not running as it should be already backed up."
-    echo "(remove $_flag to force)"
+    echo "Not running as it should be already backed up. (Consider --force option)"
     exit 0
 fi
 

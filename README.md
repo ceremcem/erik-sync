@@ -37,6 +37,8 @@ This is the backup toolset I'm currently using on my laptop.
   
 14. Data should be deduplicated.
 
+    > See https://btrfs.wiki.kernel.org/index.php/Deduplication#Duplicate_file_finders_with_btrfs_support
+
 # Install 
 
 ```

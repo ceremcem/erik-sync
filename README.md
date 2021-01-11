@@ -2,9 +2,9 @@
 
 This is the backup toolset I'm currently using on my laptop. 
 
-### Design considerations
+## Features
 
-> Assuming 6M files consuming 800GB space on a 1TB disk.
+> Assuming 6M files consuming 800GB disk space on a 1TB disk.
 
 1. Taking whole system snapshot(s) requires less than 10 seconds and does not disturb the running
    system. 
@@ -21,7 +21,7 @@ This is the backup toolset I'm currently using on my laptop.
 9. Configuring a brand new external usb storage as a backup unit (partitioning, formatting, etc.) takes less than 5 minutes.
 10. All dangerous operations are performed via dedicated tools and have proper error guards. 
 
-##### Work In Progress
+#### Work In Progress
 
 11. Only necessary changes should be sent to a remote server (no cache/temporary files).
 12. Backups should be transferred over an unreliable network connection. Transfers should be resumable. (See https://github.com/ceremcem/smith-sync/issues/10)

@@ -4,7 +4,7 @@ This is the backup toolset I'm currently using on my laptop.
 
 ### Design considerations
 
-> Assuming I have ~800GB data on a 1TB disk.
+> Assuming 6M files consuming 800GB space on a 1TB disk.
 
 1. Taking snapshots should take less than 10 seconds and should not disturb the running
    system. 
@@ -29,7 +29,8 @@ This is the backup toolset I'm currently using on my laptop.
 11. Only necessary changes should be sent to a remote server (no cache/temporary files).
 12. Backups should be transferred over an unreliable network connection. Transfers should be resumable.
 
-    > BTRFS send/receive can not resume transfers 
+    > * BTRFS send/receive can not resume transfers 
+    > * See https://unix.stackexchange.com/q/102620/65781
 
 13. Backup disk on the remote site should always be ready to boot a similar hardware.
  

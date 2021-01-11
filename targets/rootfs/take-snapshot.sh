@@ -73,3 +73,6 @@ conf="btrbk.conf"
 sudo ../../smith-sync/btrbk -c $conf.calculated --progress $action
 [[ "$action" == "run" ]] && \
     echo $EPOCHSECONDS > /tmp/take-snapshot.last-run.txt
+
+echo
+echo "Done."

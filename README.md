@@ -8,7 +8,7 @@ This is the backup toolset I'm currently using on my laptop.
 
 1. Taking whole system snapshot(s) requires less than 10 seconds and does not disturb the running
    system. 
-2. Every snapshot is in an internally consistent state. 
+2. Every snapshot is internally consistent. 
 3. Great number of backups are kept on hard disk with a negligible space cost. 
 4. Sending changes to the physical backup disk costs an extra of 5 minutes at most. 
 5. All backup operations are performed unattended (periodic, when system is idle, 

@@ -5,7 +5,7 @@ _sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $_sdir
 t0=$EPOCHSECONDS
 ./attach.sh
-notify-send "Backing up to zencefil."
+notify-send -u critical "Backing up to zencefil."
 ../rootfs/take-snapshot.sh
 time ./backup.sh
 ./assemble-bootable.sh --refresh --full

@@ -17,4 +17,5 @@ echo "Monitoring zencefil: $dev"
 while sleep 1; do test -b "$dev" || break; done;
 echo "Waiting for zencefil to attach..."
 while sleep 1; do test -b "$dev" && break; done;
+notify-send "Detected zencefil..."
 ./auto.sh

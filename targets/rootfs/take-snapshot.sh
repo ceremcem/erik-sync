@@ -63,9 +63,10 @@ done; set -- "${args[@]}"
 [[ $(whoami) = "root" ]] || { sudo $0 $relaunch_args; exit 0; }
 
 # make sure that everything is written on the disk
+echo "Syncing..."
 sync
 
-# backup boot partition contents 
+echo "Backup boot partition contents"
 rsync -avP /boot/ /boot.backup/
 
 cd $_sdir

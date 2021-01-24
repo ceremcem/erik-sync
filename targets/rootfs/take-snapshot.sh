@@ -62,6 +62,8 @@ done; set -- "${args[@]}"
 # All checks are done, run as root.
 [[ $(whoami) = "root" ]] || { sudo $0 $relaunch_args; exit 0; }
 
+# make sure that everything is written on the disk
+sync
 
 # backup boot partition contents 
 rsync -avP /boot/ /boot.backup/

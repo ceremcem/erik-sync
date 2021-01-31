@@ -28,7 +28,7 @@ on_kill(){
 trap -- on_kill SIGTERM SIGHUP SIGINT
 
 cd $_sdir
-notify-send "Backing up to $hd."
+notify-send -u critical "Backing up to $hd."
 t0=$EPOCHSECONDS
 ./attach.sh
 time ./backup.sh

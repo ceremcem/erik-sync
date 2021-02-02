@@ -32,6 +32,10 @@ notify-send -u critical "Backing up to $hd."
 t0=$EPOCHSECONDS
 ./attach.sh
 time ./backup.sh
+
+snapshots=$(cat btrbk.conf | grep "target\b" | awk '{print $2}')
+../../smith-sync/list-backup-dates.sh $snapshots > current-backups.list
+
 ./assemble-bootable.sh --refresh --full
 #./$hd-detach.sh
 t1=$EPOCHSECONDS

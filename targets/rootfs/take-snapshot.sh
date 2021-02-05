@@ -77,5 +77,6 @@ sudo ../../smith-sync/btrbk -c $conf.calculated --progress $action
 [[ "$action" == "run" ]] && \
     echo $EPOCHSECONDS > /tmp/take-snapshot.last-run.txt
 
+. $_sdir/list-timestamps.sh
 echo
 echo "Done."

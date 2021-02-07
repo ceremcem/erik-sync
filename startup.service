@@ -14,3 +14,4 @@ run-in-tmux "sudo ./on-idle/on-idle.sh 00:01:00 ./scrub/scrub-mounted.sh"
 run-in-tmux "sudo ./on-idle/on-idle.sh 0:02:00 ./targets/masa/auto.sh"
 run-in-tmux "cd $_sdir/targets/rootfs" 'sudo ./periodic-snapshot.sh'
 run-in-tmux "cd ./targets/zencefil/" "sudo bash -c -i 'while sleep 1; do ./poll.sh; done'"
+run-in-tmux "./backup-status.sh"

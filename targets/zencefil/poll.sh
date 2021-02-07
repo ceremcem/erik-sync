@@ -13,8 +13,10 @@ cd $_sdir
 
 source ./config.sh
 dev="/dev/disk/by-id/$wwn"
-echo "Monitoring zencefil: $dev"
+echo "---------------------------------"
+echo "Please unplug zencefil."
 while sleep 1; do test -b "$dev" || break; done;
+echo "---------------------------------"
 echo "Waiting for zencefil to attach..."
 while sleep 1; do test -b "$dev" && break; done;
 notify-send "Detected zencefil..."

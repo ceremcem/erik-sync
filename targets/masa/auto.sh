@@ -27,14 +27,23 @@ on_kill(){
 # ignore those signals:
 trap -- on_kill SIGTERM SIGHUP SIGINT
 
+list_curr_snapshots(){
+    local snapshots=$(cat btrbk.conf | grep "target\b" | awk '{print $2}')
+    ../../smith-sync/list-backup-dates.sh $snapshots > current-backups.list
+}
+
+cleanup(){
+    list_curr_snapshots
+}
+
+trap cleanup EXIT
+
 cd $_sdir
 notify-send -u critical "Backing up to $hd."
 t0=$EPOCHSECONDS
 ./attach.sh
 time ./backup.sh
 
-snapshots=$(cat btrbk.conf | grep "target\b" | awk '{print $2}')
-../../smith-sync/list-backup-dates.sh $snapshots > current-backups.list
 
 ./assemble-bootable.sh --refresh --full
 #./$hd-detach.sh

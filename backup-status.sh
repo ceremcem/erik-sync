@@ -1,4 +1,6 @@
 #!/bin/bash
+_sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 set -eu
 
 containsElement () {
@@ -8,7 +10,7 @@ containsElement () {
   return 1
 }
 
-targets=( $(find targets/ -name "current-backups.list") )
+targets=( $(find "$_sdir/targets/" -name "current-backups.list") )
 
 merged=( $(cat "${targets[@]}" | sort -n -r | uniq) )
 

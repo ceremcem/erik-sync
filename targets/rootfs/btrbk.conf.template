@@ -5,6 +5,6 @@ snapshot_preserve       2w 6m
 
 snapshot_dir           snapshots/erik3
 
-volume /mnt/heybe-root
+volume {{actual_rootfs_mountpoint}}
   subvolume rootfs
 

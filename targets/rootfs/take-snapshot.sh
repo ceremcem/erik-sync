@@ -71,7 +71,13 @@ rsync -avP /boot/ /boot.backup/
 
 cd $_sdir
 conf="btrbk.conf"
-../../smith-sync/btrbk-gen-config $conf > $conf.calculated
+get_root_mntpoint(){
+    # returns the mountpoint where the root subvolume mounted which holds the actual rootfs.
+    mount | grep $(cat /etc/fstab | awk '$2 == "/" {print $1}') | grep "\bsubvolid=5\b" | awk '{print $3}'
+}
+cat $conf | sed -e "s|{{actual_rootfs_mountpoint}}|$(get_root_mntpoint)|" > "${conf}.gen"
+../../smith-sync/btrbk-gen-config $conf.gen > $conf.calculated
+echo "Generated $conf.calculated"
 
 sudo ../../smith-sync/btrbk -c $conf.calculated --progress $action
 [[ "$action" == "run" ]] && \

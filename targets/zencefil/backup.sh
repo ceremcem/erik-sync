@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o pipefail
 _sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 tools="../../smith-sync"
 
@@ -9,4 +10,7 @@ conf="btrbk.conf"
 $tools/btrbk-gen-config $conf > $conf.calculated
 
 $tools/btrbk -c $conf.calculated clean
-$tools/btrbk -c $conf.calculated --progress ${1:-run}
+tf=$(mktemp)
+trap "rm -f $tf" EXIT
+$tools/btrbk -c $conf.calculated --progress ${1:-run} | tee $tf
+grep '^!!!' -q $tf && exit 1 || exit 0

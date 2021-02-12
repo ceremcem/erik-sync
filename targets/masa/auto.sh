@@ -29,7 +29,9 @@ trap -- on_kill SIGTERM SIGHUP SIGINT
 
 list_curr_snapshots(){
     local snapshots=$(cat btrbk.conf | grep "target\b" | awk '{print $2}')
-    ../../smith-sync/list-backup-dates.sh $snapshots > current-backups.list
+    if [[ -d $snapshots ]]; then
+        ../../smith-sync/list-backup-dates.sh $snapshots > current-backups.list
+    fi
 }
 
 cleanup(){
@@ -39,11 +41,17 @@ cleanup(){
 trap cleanup EXIT
 
 cd $_sdir
+if sudo -u $SUDO_USER vboxmanage showvminfo "masa-testing" | grep -q "running (since"; then
+    notify-send -u critical "Not backing up $hd" "masa-testing is running."
+    exit 1
+fi
 notify-send -u critical "Backing up to $hd."
 t0=$EPOCHSECONDS
 ./attach.sh
-time ./backup.sh
-
+if ! time ./backup.sh; then
+    notify-send -u critical "ERROR: $hd backup" "Something went wrong. Check console."
+    exit 1
+fi
 
 ./assemble-bootable.sh --refresh --full
 #./$hd-detach.sh

@@ -21,11 +21,13 @@ echo "Waiting for $hd to attach..."
 while sleep 1; do test -b "$dev" && break; done;
 
 _timeout=10
-if zenity --timeout $_timeout --question --text \
-    "Backup to $hd? \n(defaults to 'Yes' in ${_timeout}s)" \
-    --ok-label="No" --cancel-label="Yes" --width 200;
-then
+zenity --timeout $_timeout --question --text \
+    "Backup to $hd? \n(timeout: ${_timeout}s)" \
+    --ok-label="Skip" --cancel-label="Backup*" --width 200;
+ans=$?
+if [[ $ans -eq 0 ]]; then
     notify-send "Skipped."
 else
+    [[ $ans -eq 5 ]] && notify-send -u critical "Backing up to $hd"
     ./auto.sh
 fi

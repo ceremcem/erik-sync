@@ -27,7 +27,8 @@ duration=`date -d@$(($t1 - $t0)) -u +%H:%M:%S`
 notify-send -u critical "$hd backup completed" "Backup completed in ${duration}."
 
 zenity --info \
-    --text="Backup of $hd completed. Will detach now." \
+    --text="Backup of $hd completed." \
+    --ok-label="Detach Now" \
     --width=200
 
 ./detach.sh

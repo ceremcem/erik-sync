@@ -12,5 +12,5 @@ $tools/btrbk-gen-config $conf > $conf.calculated
 $tools/btrbk -c $conf.calculated clean
 tf=$(mktemp)
 trap "rm -f $tf" EXIT
-$tools/btrbk -c $conf.calculated --progress ${1:-run} | tee $tf
+$tools/btrbk -c $conf.calculated --progress -v ${1:-run} | tee $tf
 grep '^!!!' -q $tf && exit 1 || exit 0

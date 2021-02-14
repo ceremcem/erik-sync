@@ -8,20 +8,28 @@ no_new=false
 hd="zencefil"
 cd $_sdir
 t0=$EPOCHSECONDS
+
 ./attach.sh
-notify-send -u critical "Backing up to $hd."
+notify-send "Backing up to $hd."
 [[ $no_new == false ]] && ../rootfs/take-snapshot.sh || echo "Skipping taking a new snapshot."
 if ! time ./backup.sh; then
     notify-send -u critical "ERROR: $hd backup" "Something went wrong. Check console."
     exit 1
 fi
 
-
 snapshots=$(cat btrbk.conf | grep "target\b" | awk '{print $2}')
 ../../smith-sync/list-backup-dates.sh $snapshots > current-backups.list
 
 ./assemble-bootable.sh --refresh --full
-./detach.sh
 t1=$EPOCHSECONDS
-notify-send -u critical "Backup of $hd has ended." \
-    "Took `date -d@$(($t1 - $t0)) -u +%H:%M:%S` seconds. $hd can be unplugged safely."
+duration=`date -d@$(($t1 - $t0)) -u +%H:%M:%S`
+
+notify-send -u critical "$hd backup completed" "Backup completed in ${duration}."
+
+zenity --info \
+    --text="Backup of $hd completed. Will detach now." \
+    --width=200
+
+./detach.sh
+notify-send "$hd is detached."
+

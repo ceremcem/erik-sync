@@ -67,7 +67,7 @@ echo "Syncing..."
 sync
 
 echo "Backup boot partition contents"
-rsync -avP /boot/ /boot.backup/
+rsync -avP --delete /boot/ /boot.backup/
 
 cd $_sdir
 conf="btrbk.conf"

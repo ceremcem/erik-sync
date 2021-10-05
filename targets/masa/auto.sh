@@ -45,7 +45,7 @@ if sudo -u $SUDO_USER vboxmanage showvminfo "masa-testing" | grep -q "running (s
     notify-send -u critical "Not backing up $hd" "masa-testing is running."
     exit 1
 fi
-notify-send -u critical "Backing up to $hd."
+notify-send "Backing up to $hd."
 t0=$EPOCHSECONDS
 ./attach.sh
 if ! time ./backup.sh; then
@@ -56,7 +56,7 @@ fi
 ./assemble-bootable.sh --refresh --full
 #./$hd-detach.sh
 t1=$EPOCHSECONDS
-notify-send -u critical "Backup of $hd has ended." \
+notify-send "Backup of $hd has ended." \
     "Took `date -d@$(($t1 - $t0)) -u +%H:%M:%S` seconds. INFO: $hd is left attached."
 
 echo $EPOCHSECONDS > $_flag

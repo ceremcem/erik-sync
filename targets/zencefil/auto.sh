@@ -20,7 +20,15 @@ fi
 snapshots=$(cat btrbk.conf | grep "target\b" | awk '{print $2}')
 ../../smith-sync/list-backup-dates.sh $snapshots > current-backups.list
 
-./assemble-bootable.sh --refresh --full
+if ! ./assemble-bootable.sh --refresh --full; then
+    echo
+    echo "-------------------------------------------------------"
+    echo "Something went wrong while assembling the bootable copy."
+    echo "$hd is left attached. Please manually handle the problem."
+    echo "-------------------------------------------------------"
+    echo
+    exit 2
+fi
 t1=$EPOCHSECONDS
 duration=`date -d@$(($t1 - $t0)) -u +%H:%M:%S`
 
@@ -32,5 +40,5 @@ zenity --info \
     --width=200
 
 ./detach.sh
-notify-send "$hd is detached."
+notify-send -u critical "$hd is detached."
 

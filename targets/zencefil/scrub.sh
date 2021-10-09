@@ -60,6 +60,17 @@ watch_progress(){
     done
 }
 
+watch_finish(){
+    while [[ -f $flag ]]; do
+        sleep 2
+        if [[ "$(scrub_status)" == "finished" ]]; then
+            echo "Finished scrubbing."
+            kill -TERM $TOP_PID
+        fi
+    done
+}
+
 watch_scrub &
 watch_stop "${1:-}" &
+watch_finish &
 watch_progress

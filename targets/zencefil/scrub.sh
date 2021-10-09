@@ -5,43 +5,61 @@ _sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 . $_sdir/config.sh
 
-_should_run=true
-cleanup(){
-    _should_run=false
-    echo "Cancelling scrub on $root_mnt"
-    btrfs scrub cancel "$root_mnt"
+export TOP_PID=$$
+
+flag="/tmp/${TOP_PID}_should_run.txt"
+
+# set the flag file
+echo "true" > $flag
+
+scrub_status(){
+    btrfs scrub status "$root_mnt" | grep Status | awk '{print $2}'
 }
 
-trap cleanup EXIT
+cleanup(){
+    rm $flag 2> /dev/null
+    echo "Cancelling scrub on $root_mnt"
+    if [[ "$(scrub_status)" == "running" ]]; then
+        btrfs scrub cancel "$root_mnt"
+    fi
+    out=$_sdir/scrub-statuses
+    mkdir -p $out
+    outfile=$out/$(date +"%Y%m%dT%H%M")-$(scrub_status).txt
+    echo "Last scrub status is written to $outfile"
+    btrfs scrub status "$root_mnt" > $outfile
+}
+
+trap cleanup EXIT SIGTERM
 
 $_sdir/attach.sh
 
-is_scrub_running(){
-    local status=$(btrfs scrub status "$root_mnt" | grep Status | awk '{print $2}')
-    if [[ "$status" == "running" ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
 watch_scrub(){
-    while $_should_run; do
-        if ! is_scrub_running; then
+    while [[ -f $flag ]]; do
+        if [[ "$(scrub_status)" != "running" ]]; then
             btrfs scrub resume "$root_mnt"
         fi
         sleep 10
     done
 }
 
+watch_stop(){
+    if [[ "${1:-}" == "--dialog" ]]; then
+        zenity --info --text "Stop scrubbing ${lvm_name}?" --width=200
+        kill -TERM $TOP_PID
+    fi
+}
+
+watch_progress(){
+    while [[ -f $flag ]]; do
+        clear
+        echo "Scrub status for $lvm_name (flag: $flag)"
+        echo "--------------------------"
+        btrfs scrub status $root_mnt
+        echo "--------------------------"
+        sleep 2
+    done
+}
+
 watch_scrub &
-
-while :; do
-    clear
-    echo "Scrub status for $lvm_name"
-    echo "--------------------------"
-    btrfs scrub status $root_mnt
-    echo "--------------------------"
-    sleep 2
-done
-
+watch_stop "${1:-}" &
+watch_progress

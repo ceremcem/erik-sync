@@ -34,10 +34,7 @@ duration=`date -d@$(($t1 - $t0)) -u +%H:%M:%S`
 
 notify-send -u critical "$hd backup completed" "Backup completed in ${duration}."
 
-zenity --info \
-    --text="Backup of $hd completed.\n\nLeave $hd as much as possible to let btrfs-cleaner to free the empty space and btrfs scrub to perform. " \
-    --ok-label="Unmount Now" \
-    --width=200
+./scrub.sh --dialog
 
 ./detach.sh
 notify-send -u critical "$hd is unmounted."

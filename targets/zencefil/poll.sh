@@ -12,19 +12,25 @@ cd $_sdir
 hd="zencefil"
 source ./config.sh
 dev="/dev/disk/by-id/$wwn"
+
 while :; do
     echo "Waiting for $hd to attach..."
     while sleep 1; do test -b "$dev" && break; done;
 
     _timeout=10
-    zenity --timeout $_timeout --question --text \
+    ans=$(zenity --timeout $_timeout --question --text \
         "Backup to $hd? \n(timeout: ${_timeout}s)" \
-        --ok-label="Skip" --cancel-label="Backup*" --width 200;
-    ans=$?
-    if [[ $ans -eq 0 ]]; then
+        --ok-label="Skip" --extra-button "Scrub" --cancel-label="Backup*" --width 200;)
+    rc=$?
+    if [[ "$ans" == "Scrub" ]]; then
+        ./scrub.sh --dialog
+        ./detach.sh
+    elif [[ $rc -eq 0 ]]; then
         notify-send "Skipped."
     else
-        [[ $ans -eq 5 ]] && notify-send -u critical "Backing up to $hd"
+        message="Backing up to $hd"
+        [[ $rc -eq 5 ]] && notify-send -u critical "$message"
+        echo "`date`: $message"
         ./auto.sh
     fi
     echo "---------------------------------"

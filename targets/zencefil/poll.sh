@@ -12,14 +12,7 @@ cd $_sdir
 hd="zencefil"
 source ./config.sh
 dev="/dev/disk/by-id/$wwn"
-while sleep 1; do
-    echo "---------------------------------"
-    echo "Please unplug $hd."
-    zenity --info --text \
-        "$hd can be safely unplugged now." \
-        --width=200
-    while sleep 1; do test -b "$dev" || break; done;
-    echo "---------------------------------"
+while :; do
     echo "Waiting for $hd to attach..."
     while sleep 1; do test -b "$dev" && break; done;
 
@@ -34,4 +27,10 @@ while sleep 1; do
         [[ $ans -eq 5 ]] && notify-send -u critical "Backing up to $hd"
         ./auto.sh
     fi
+    echo "---------------------------------"
+    message="$hd can be safely unplugged now."
+    echo "$message"
+    zenity --info --text "$message" --width=200
+    while sleep 1; do test -b "$dev" || break; done;
+    echo "---------------------------------"
 done

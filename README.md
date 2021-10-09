@@ -1,6 +1,14 @@
 # Description 
 
-This is the backup toolset I'm currently using on my laptop. 
+This is the backup toolset I'm currently using on my laptop. My hard disk configurations reside inside the `./targets/*` folders. There are 3 hard disks I'm using: 
+
+* `masa` and `heybe` are the permanently installed disks on the laptop. 
+* `zencefil` is the external usb disk. 
+* `rootfs` is the virtual target that always operates on the disk I'm currently using (`masa`, `heybe` or `zencefil`).  
+
+Normally I'm running my system from one of the installed disks (`masa` or `heybe`, does not matter) on the laptop. Periodic snapshots are taken automatically on the main disk. When the system is idle, the backups are transferred to the other installed disk. The other disk is always kept ready to boot the system with the latest transferred backup. 
+
+If I plug the external usb disk, a dialog pops up and asks if I want to start the backup process or only start filesystem checking. The external disk is also left bootable with the latest backup after transferring the backups.  
 
 ## Features
 
@@ -64,7 +72,7 @@ A `scrub start` job is explicitly triggered by a `weekly` scheduled `systemd` se
 
 # Plug-n-backup
 
-Backups are started upon plugging the disk named `zencefil`. This is controlled via `zencefil/poll.sh` script, run by `./startup.service`. 
+Backups are started upon plugging the disk named `zencefil`. This is controlled via `targets/zencefil/poll.sh` script, run by `./startup.service`. 
 
 # Configuration 
 
@@ -73,4 +81,6 @@ There are a few configuration files involved:
 * `targets/{heybe,masa,zencefil}/config.sh`
 * `scrub/credentials.sh`
 
-Disk layout is decided in `smith-sync/multistrap-helpers/install-to-disk/format-btrfs-swap-lvm-luks.sh`.
+# Disk Layout
+
+Disk layout is configured by `smith-sync/multistrap-helpers/install-to-disk/format-btrfs-swap-lvm-luks.sh`.

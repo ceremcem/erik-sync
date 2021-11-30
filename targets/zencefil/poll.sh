@@ -34,9 +34,8 @@ while :; do
         ./auto.sh
     fi
     echo "---------------------------------"
-    message="$hd can be safely unplugged now."
+    message="Backup is completed."
     echo "$message"
-    zenity --info --text "$message" --width=200
     while sleep 1; do test -b "$dev" || break; done;
     echo "---------------------------------"
 done

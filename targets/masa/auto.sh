@@ -15,7 +15,7 @@ done < $_sdir/btrbk.conf
 source_snapshots="$volume/$snapshot_dir"
 target_snapshots="$target"
 
-MARK_SNAPSHOTS="../../smith-sync/mark-snapshots.sh --suffix .MASA_DONT_DELETE"
+MARK_SNAPSHOTS="../../smith-sync/mark-snapshots.sh --suffix .M"
 
 echo "source: $source_snapshots"
 echo "target: $target_snapshots"
@@ -84,3 +84,6 @@ latest_timestamp=$($MARK_SNAPSHOTS "$target_snapshots" --get-latest-ts)
 $MARK_SNAPSHOTS "$source_snapshots" --clean
 $MARK_SNAPSHOTS "$source_snapshots" --timestamp $latest_timestamp --freeze
 
+echo "------------------------------------"
+echo "Snapshot marking has been completed."
+echo "------------------------------------"

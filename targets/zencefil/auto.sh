@@ -33,7 +33,7 @@ t0=$EPOCHSECONDS
 ./attach.sh
 notify-send "Backing up to $hd."
 
-MARK_SNAPSHOTS="../../smith-sync/mark-snapshots.sh"
+MARK_SNAPSHOTS="../../smith-sync/mark-snapshots.sh --suffix .Z"
 
 [[ $no_new == false ]] && ../rootfs/take-snapshot.sh || echo "Skipping taking a new snapshot."
 $MARK_SNAPSHOTS "$source_snapshots" --unfreeze

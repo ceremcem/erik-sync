@@ -15,7 +15,7 @@ done < $_sdir/btrbk.conf
 source_snapshots="$volume/$snapshot_dir"
 target_snapshots="$target"
 
-MARK_SNAPSHOTS="../../smith-sync/mark-snapshots.sh --suffix .M"
+MARK_SNAPSHOTS="../../smith-sync/mark-snapshots.sh --suffix .MASA"
 
 echo "source: $source_snapshots"
 echo "target: $target_snapshots"

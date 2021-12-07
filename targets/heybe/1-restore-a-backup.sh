@@ -33,4 +33,13 @@ sudo rmdir $_tmp \
     && sudo btrfs sub create $_tmp \
     && sudo chmod 1777 $_tmp
 
-echo "$restore_folder is created from backup: $restore_date."
+echo
+echo "Success: $restore_folder is created from backup: $restore_date."
+
+echo
+echo "---------------------------------------------------------"
+echo "REMINDER: Set brightness file permissions after booting:"
+echo chmod 666 /sys/class/backlight/intel_backlight/brightness
+echo "---------------------------------------------------------"
+echo
+

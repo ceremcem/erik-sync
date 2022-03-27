@@ -65,7 +65,7 @@ fi
 notify-send "Backing up to $hd."
 t0=$EPOCHSECONDS
 ./attach.sh
-$MARK_SNAPSHOTS "$source_snapshots" --unfreeze
+$MARK_SNAPSHOTS "$source_snapshots" --unfreeze --fix-received "$target_snapshots"
 if ! time ./backup.sh; then
     notify-send -u critical "ERROR: $hd backup" "Something went wrong. Check console."
     exit 1

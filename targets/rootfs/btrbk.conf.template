@@ -5,6 +5,8 @@ snapshot_preserve       4d 2w 3m
 
 snapshot_dir           snapshots/erik3
 
+lockfile                   /var/lock/zencefil-btrbk.lock
+
 volume {{actual_rootfs_mountpoint}}
   subvolume rootfs
 

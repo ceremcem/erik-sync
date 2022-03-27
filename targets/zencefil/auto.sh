@@ -36,7 +36,7 @@ notify-send "Backing up to $hd."
 MARK_SNAPSHOTS="../../smith-sync/mark-snapshots.sh --suffix .ZENCEFIL"
 
 [[ $no_new == false ]] && ../rootfs/take-snapshot.sh || echo "Skipping taking a new snapshot."
-$MARK_SNAPSHOTS "$source_snapshots" --unfreeze
+$MARK_SNAPSHOTS "$source_snapshots" --unfreeze --fix-received "$target_snapshots"
 if ! time ./backup.sh; then
     notify-send -u critical "ERROR: $hd backup" "Something went wrong. Check console."
     do_detach

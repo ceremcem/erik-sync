@@ -13,6 +13,8 @@ hd="zencefil"
 source ./config.sh
 dev="/dev/disk/by-id/$wwn"
 
+trap './detach.sh' EXIT
+
 while :; do
     echo "Waiting for $hd to attach..."
     while sleep 1; do test -b "$dev" && break; done;
@@ -20,7 +22,7 @@ while :; do
     _timeout=10
     ans=$(zenity --timeout $_timeout --question --text \
         "Backup to $hd? \n(timeout: ${_timeout}s)" \
-        --ok-label="Skip" --extra-button "Scrub" --cancel-label="Backup*" --width 200;)
+        --ok-label="Do nothing" --extra-button "Scrub" --cancel-label="Backup*" --width 200;)
     rc=$?
     if [[ "$ans" == "Scrub" ]]; then
         ./scrub.sh --dialog

@@ -16,6 +16,8 @@ dev="/dev/disk/by-id/$wwn"
 trap './detach.sh' EXIT
 
 while :; do
+    t0=
+    t1=
     echo "Waiting for $hd to attach..."
     while sleep 1; do test -b "$dev" && break; done;
 
@@ -28,16 +30,24 @@ while :; do
         ./scrub.sh --dialog
         ./detach.sh
     elif [[ $rc -eq 0 ]]; then
-        notify-send "Skipped."
+        notify-send "Doing nothing."
+        echo "Doing nothing due to user selection."
     else
-        message="Backing up to $hd"
-        [[ $rc -eq 5 ]] && notify-send -u critical "$message"
+        t0=$EPOCHSECONDS
+        message="Started plug-n-backup for $hd"
+        [[ $rc -eq 5 ]] && notify-send -u critical "$message" "`date`"
         echo "`date`: $message"
         ./auto.sh
+        echo "---------------------------------"
+        t1=$EPOCHSECONDS
+        duration=`date -d@$(($t1 - $t0)) -u +%H:%M:%S`
+
+        echo "Backup of $hd has been completed in $duration."
+        notify-send -u critical "Backup of $hd has been completed" \
+            "Duration: $duration"
     fi
-    echo "---------------------------------"
-    message="Backup is completed."
-    echo "$message"
+
+    # Wait for disk to detach
     while sleep 1; do test -b "$dev" || break; done;
     echo "---------------------------------"
 done

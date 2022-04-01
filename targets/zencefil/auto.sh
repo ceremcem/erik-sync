@@ -75,7 +75,7 @@ fi
 
 ./detach.sh
 ./attach.sh
-notify-send "Backing up to $hd."
+notify-send "Transferring data to $hd."
 
 $MARK_SNAPSHOTS "$source_snapshots" --unfreeze --fix-received "$target_snapshots"
 if ! time ./backup.sh; then
@@ -99,16 +99,20 @@ if ! ./assemble-bootable.sh --refresh --full; then
     echo
     exit 2
 fi
-t1=$EPOCHSECONDS
-duration=`date -d@$(($t1 - $t0)) -u +%H:%M:%S`
-
-notify-send -u critical "$hd backup completed" "Backup completed in ${duration}."
 
 #./scrub.sh --dialog
 
-do_detach
+do_detach # visual notification is displayed within the function
+
+t1=$EPOCHSECONDS
+duration=`date -d@$(($t1 - $t0)) -u +%H:%M:%S`
+echo "$hd data transfer completed." "Duration: ${duration}."
 
 # Backups are taken succesfully, remove the old saved snapshots, create new ones. (2/2)
 # (Perform these operations after detach, in order to save time
 $MARK_SNAPSHOTS "$source_snapshots" --clean
 $MARK_SNAPSHOTS "$source_snapshots" --timestamp $latest_timestamp --freeze
+
+t2=$EPOCHSECONDS
+duration=`date -d@$(($t2 - $t1)) -u +%H:%M:%S`
+echo "$hd latest snapshots are frozen in: ${duration}."

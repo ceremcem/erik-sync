@@ -73,22 +73,24 @@ else
     echo "Skipping taking a new snapshot."
 fi
 
-./detach.sh
-./attach.sh
-notify-send "Transferring data to $hd."
+echo "(Trying to unmount $hd first, just in case)"
+./detach.sh &> /dev/null
 
+echo "Mounting $hd partitions accordingly..."
+./attach.sh
+
+notify-send "Unfreezing the snapshots" "Unfreezing the latest common snapshots of $hd."
 $MARK_SNAPSHOTS "$source_snapshots" --unfreeze --fix-received "$target_snapshots"
+
+notify-send "Transferring data to $hd."
 if ! time ./backup.sh; then
     notify-send -u critical "ERROR: $hd backup" "Something went wrong. Check console."
     do_detach
     exit 1
 fi
 
-
 # Backups are taken succesfully, remove the old saved snapshots, create new ones. (1/2)
 latest_timestamp=$($MARK_SNAPSHOTS "$target_snapshots" --get-latest-ts)
-
-../../smith-sync/list-backup-dates.sh $target_snapshots > current-backups.list
 
 if ! ./assemble-bootable.sh --refresh --full; then
     echo

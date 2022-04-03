@@ -7,7 +7,7 @@ do_detach(){
     notify-send -u critical "$hd is unmounted."
 }
 
-suspend_lock_file=/tmp/cca-suspend.lock.zencefil
+suspend_lock_file=/tmp/cca-suspend.defer.zencefil
 disable_cca_suspend(){
     msg="* INFO: Disabling cca-suspend."
     echo "$msg"; notify-send -u critical "$msg"

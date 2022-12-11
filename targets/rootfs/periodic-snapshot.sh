@@ -3,7 +3,7 @@ _sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 [[ $(whoami) = "root" ]] || { sudo "$0" "$@"; exit 0; }
 
-period="6h"
+period="1h"
 
 # Prevent taking snapshots while dpkg is performing:
 # https://unix.stackexchange.com/q/681324/65781

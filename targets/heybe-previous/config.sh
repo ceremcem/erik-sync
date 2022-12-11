@@ -1,11 +1,10 @@
-#wwn="usb-WD_Elements_10A8_575833314536335946303730-0:0"
-wwn="ata-WDC_WD10JMVW-11AJGS1_WD-WX31E63YF070"
-lvm_name="zencefil"
+wwn="ata-ST1000LM035-1RK172_WES0RD9E"
+lvm_name="heybe"
 
 # use ./get-disk-info.sh to identify the UUID's:
-boot_part='UUID=fe2cfe8c-28d3-455c-961e-b586cf763367'
-crypt_part='UUID=32d6e3b6-1e75-4d40-86c2-5a8853996e73'
-crypt_key="$(cat ./keypath)"
+boot_part='UUID=f8ffebd3-cf35-4763-bfc7-a0969e83c7cc'
+crypt_part='UUID=8167268b-657a-47d5-a7df-5dbe07e8d57b'
+crypt_key="/home/ceremcem/.ssh/luks-keys/heybe-key-1"
 
 # you probably won't need to change those:
 crypt_dev_name=${lvm_name}_crypt

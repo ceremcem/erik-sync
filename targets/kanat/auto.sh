@@ -18,7 +18,7 @@ target_snapshots="$target"
 echo "source: $source_snapshots"
 echo "target: $target_snapshots"
 
-hd="masa"
+hd="kanat"
 
 tflag="/tmp/take-snapshot.last-run.txt" # timestamp file
 _flag="/tmp/$hd-auto.last-run.txt"
@@ -41,19 +41,6 @@ on_kill(){
 
 # ignore those signals:
 trap -- on_kill SIGTERM SIGHUP SIGINT
-
-list_curr_snapshots(){
-    local snapshots=$(cat btrbk.conf | grep "target\b" | awk '{print $2}')
-    if [[ -d $snapshots ]]; then
-        ../../smith-sync/list-backup-dates.sh $snapshots > current-backups.list
-    fi
-}
-
-cleanup(){
-    list_curr_snapshots
-}
-
-trap cleanup EXIT
 
 cd $_sdir
 if sudo -u $SUDO_USER vboxmanage showvminfo "$hd-testing" | grep -q "running (since"; then

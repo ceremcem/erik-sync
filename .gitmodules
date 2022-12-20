@@ -13,3 +13,18 @@
 [submodule "service-runner"]
 	path = service-runner
 	url = https://github.com/aktos-io/service-runner
+[submodule "targets/masa"]
+	path = targets/masa
+	url = https://github.com/ceremcem/smith-sync-new-target
+[submodule "targets/hello"]
+	path = targets/hello
+	url = git@github.com:ceremcem/smith-sync-new-target
+[submodule "targets/hellothere"]
+	path = targets/hellothere
+	url = git@github.com:ceremcem/smith-sync-new-target
+[submodule "targets/kanat"]
+	path = targets/kanat
+	url = git@github.com:ceremcem/smith-sync-new-target
+[submodule "targets/zencefil"]
+	path = targets/zencefil
+	url = git@github.com:ceremcem/smith-sync-new-target

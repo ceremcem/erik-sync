@@ -11,7 +11,8 @@ launch-service $(calc-session-name $(readlink -f "$0")) # dirname-scriptname
 
 # run commands in tmux session
 run-in-tmux "sudo ./on-idle/on-idle.sh 00:01:00 ./scrub/scrub-mounted.sh"
-run-in-tmux "sudo ./on-idle/on-idle.sh 0:02:00 ./targets/masa/auto.sh"
+#run-in-tmux "sudo ./on-idle/on-idle.sh 0:02:00 ./targets/masa/auto.sh"
+run-in-tmux "sudo bash -c 'while sleep 1m; do ./targets/masa/auto.sh; done'"
 run-in-tmux "cd $_sdir/targets/rootfs" 'sudo ./periodic-snapshot.sh'
 run-in-tmux "cd ./targets/zencefil/" "./poll.sh"
 run-in-tmux 'sudo watch -n 100 "./targets/rootfs/backup-status.sh"'

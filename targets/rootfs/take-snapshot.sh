@@ -20,6 +20,27 @@ HELP
     exit
 }
 
+savestate_vms(){
+    tmp=/tmp/currently-running-vms.txt
+    VBoxManage list runningvms | awk -F'"' '{print $2}' > $tmp
+    readarray -t running_vms < $tmp
+    for vm in "${running_vms[@]}"; do
+        [[ -z "$vm" ]] && continue
+        echo "Savestate: $vm"
+        VBoxManage controlvm "$vm" savestate
+    done
+}
+
+start_vms(){
+    tmp=/tmp/currently-running-vms.txt
+    readarray -t running_vms < $tmp
+    for vm in "${running_vms[@]}"; do
+        [[ -z "$vm" ]] && continue
+        echo "Starting: $vm"
+        VBoxManage startvm "$vm"
+    done
+}
+
 mkdir -p $_sdir/exclude
 
 # All checks are done, run as root.
@@ -102,9 +123,14 @@ sync
 echo "Backup boot partition contents"
 [[ $action == "dryrun" ]] || rsync -avP --delete /boot/ /boot.backup/
 
-sudo ../../smith-sync/btrbk -c $conf.calculated --progress $action "${btrbk_args[@]}"
+# Save running virtual machine states
+sudo -u $SUDO_USER bash -c "$(declare -f savestate_vms); savestate_vms"
+
+../../smith-sync/btrbk -c $conf.calculated --progress $action "${btrbk_args[@]}"
 [[ "$action" == "run" ]] && \
     echo $EPOCHSECONDS > /tmp/take-snapshot.last-run.txt
+
+sudo -u $SUDO_USER bash -c "$(declare -f start_vms); start_vms"
 
 . $_sdir/backup-status.sh
 echo

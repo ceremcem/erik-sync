@@ -20,24 +20,24 @@ HELP
     exit
 }
 
-savestate_vms(){
+take_snapshot_vms(){
     tmp=/tmp/currently-running-vms.txt
     VBoxManage list runningvms | awk -F'"' '{print $2}' > $tmp
     readarray -t running_vms < $tmp
     for vm in "${running_vms[@]}"; do
         [[ -z "$vm" ]] && continue
         echo "Savestate: $vm"
-        VBoxManage controlvm "$vm" savestate
+        VBoxManage snapshot "$vm" take "temporary snapshot taken by take-snapshot.sh"
     done
 }
 
-start_vms(){
+delete_snapshot_vms(){
     tmp=/tmp/currently-running-vms.txt
     readarray -t running_vms < $tmp
     for vm in "${running_vms[@]}"; do
         [[ -z "$vm" ]] && continue
         echo "Starting: $vm"
-        VBoxManage startvm "$vm"
+        VBoxManage snapshot "$vm" delete "temporary snapshot taken by take-snapshot.sh"
     done
 }
 
@@ -124,13 +124,13 @@ echo "Backup boot partition contents"
 [[ $action == "dryrun" ]] || rsync -avP --delete /boot/ /boot.backup/
 
 # Save running virtual machine states
-sudo -u $SUDO_USER bash -c "$(declare -f savestate_vms); savestate_vms"
+sudo -u $SUDO_USER bash -c "$(declare -f take_snapshot_vms); take_snapshot_vms"
 
 ../../smith-sync/btrbk -c $conf.calculated --progress $action "${btrbk_args[@]}"
 [[ "$action" == "run" ]] && \
     echo $EPOCHSECONDS > /tmp/take-snapshot.last-run.txt
 
-sudo -u $SUDO_USER bash -c "$(declare -f start_vms); start_vms"
+sudo -u $SUDO_USER bash -c "$(declare -f delete_snapshot_vms); delete_snapshot_vms"
 
 . $_sdir/backup-status.sh
 echo

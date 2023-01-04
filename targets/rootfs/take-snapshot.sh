@@ -116,6 +116,13 @@ done
 
 echo "Excluded snapshots: ${btrbk_args[@]}"
 
+# Check inaccessible VMs
+if ! sudo -u $SUDO_USER $_sdir/check-inaccesible-vms.sh; then
+    notify-send -u critical "Failed to take snapshot" \
+            "There are inaccessible VMs, check the console"
+    exit 1
+fi
+
 # make sure that everything is written on the disk
 echo "Syncing..."
 sync

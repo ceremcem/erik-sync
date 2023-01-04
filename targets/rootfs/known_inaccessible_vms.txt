@@ -1,0 +1,8 @@
+# Add "{UUID}" of your known inaccessible VM
+# List by: 
+#
+#     VBoxManage list vms | awk '{print $NF}'
+#
+
+# Example:
+{c90fce3c-d639-4f5e-809b-9cb516283835}

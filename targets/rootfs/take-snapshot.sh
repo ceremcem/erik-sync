@@ -22,7 +22,7 @@ HELP
 
 take_snapshot_vms(){
     tmp=/tmp/currently-running-vms.txt
-    VBoxManage list runningvms | awk -F'"' '{print $2}' > $tmp
+    VBoxManage list runningvms | awk -F'"' '{print $2}' | grep -v testing > $tmp
     readarray -t running_vms < $tmp
     for vm in "${running_vms[@]}"; do
         [[ -z "$vm" ]] && continue

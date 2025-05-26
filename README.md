@@ -1,3 +1,92 @@
+# Start a VM from an older backup 
+
+```
+cd tartget/yourtarget
+./attach
+./assemble-older-snap.sh 20250210T2335 # omit date to get list of available snapshots
+./test-in-virtualbox.sh
+```
+
+Example:
+
+```
+ceremcem@erik3:kanat$ ./attach.sh 
+  ACTIVE            '/dev/kanat/swap' [16.00 GiB] inherit
+  ACTIVE            '/dev/kanat/root' [877.06 GiB] inherit
+Mounting /dev/mapper/kanat-root
+kanat is attached. (/mnt/kanat-root)
+ceremcem@erik3:kanat$ ./assemble-older-snap.sh 
+Using /mnt/kanat-root/rootfs as destination.
+Date should be one of the followings:
+20250206T0054
+20250209T0459
+20250210T2335
+20250212T1001
+20250212T2229
+ceremcem@erik3:kanat$ ./assemble-older-snap.sh 20250212T1001
+Using /mnt/kanat-root/rootfs as destination.
+Recursively deleting /mnt/kanat-root/rootfs
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/var/tmp'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/var/log'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/var/lib/lxc/ubuntu-test/rootfs'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/var/lib/lxc/rootfs.stable'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/var/lib/lxc/owncloud/rootfs'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/var/lib/lxc/fc-old/rootfs'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/var/lib/lxc/fc4/rootfs'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/var/lib/lxc/couchdb-erik/rootfs'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/var/lib/lxc/antimony/rootfs'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/var/lib/lxc/aecad/rootfs'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/var/cache'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/tmp'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/home/ceremcem/VirtualBox_VMs'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/home/ceremcem/temp'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs/home/ceremcem'
+Delete subvolume (no-commit): '/mnt/kanat-root/rootfs'
+Restoring /mnt/kanat-root/rootfs from backups (/mnt/kanat-root/snapshots/erik3/)
++ ./restore-backups.sh /mnt/kanat-root/snapshots/erik3/ /mnt/kanat-root/rootfs --date 20250212T1001
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//rootfs.20250212T1001 /mnt/kanat-root/rootfs
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//home/ceremcem.20250212T1001 /mnt/kanat-root/rootfs//home/ceremcem
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//home/ceremcem/temp.20250212T1001 /mnt/kanat-root/rootfs//home/ceremcem/temp
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//home/ceremcem/VirtualBox_VMs.20250212T1001 /mnt/kanat-root/rootfs//home/ceremcem/VirtualBox_VMs
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//var/cache.20250212T1001 /mnt/kanat-root/rootfs//var/cache
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//var/log.20250212T1001 /mnt/kanat-root/rootfs//var/log
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//var/lib/lxc/rootfs.stable.20250212T1001 /mnt/kanat-root/rootfs//var/lib/lxc/rootfs.stable
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//var/lib/lxc/aecad/rootfs.20250212T1001 /mnt/kanat-root/rootfs//var/lib/lxc/aecad/rootfs
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//var/lib/lxc/antimony/rootfs.20250212T1001 /mnt/kanat-root/rootfs//var/lib/lxc/antimony/rootfs
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//var/lib/lxc/couchdb-erik/rootfs.20250212T1001 /mnt/kanat-root/rootfs//var/lib/lxc/couchdb-erik/rootfs
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//var/lib/lxc/fc4/rootfs.20250212T1001 /mnt/kanat-root/rootfs//var/lib/lxc/fc4/rootfs
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//var/lib/lxc/fc-old/rootfs.20250212T1001 /mnt/kanat-root/rootfs//var/lib/lxc/fc-old/rootfs
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//var/lib/lxc/owncloud/rootfs.20250212T1001 /mnt/kanat-root/rootfs//var/lib/lxc/owncloud/rootfs
++ btrfs -q sub snap /mnt/kanat-root/snapshots/erik3//var/lib/lxc/ubuntu-test/rootfs.20250212T1001 /mnt/kanat-root/rootfs//var/lib/lxc/ubuntu-test/rootfs
++ set +x
+Create subvolume '/mnt/kanat-root/rootfs/tmp'
+Create subvolume '/mnt/kanat-root/rootfs/var/tmp'
+Outdir is set to: /mnt/kanat-root/rootfs
+Creating rootfs/1-make-bootable-rootfs.sh: OK (Updated)
+Creating rootfs/2-install-grub.sh: OK (Updated)
+Creating rootfs/3-finalize-and-update.sh: OK (Updated)
+Creating rootfs/etc/crypttab: OK (Updated)
+Creating rootfs/etc/default/grub.d/declare-resume-device.cfg: OK (Updated)
+Creating rootfs/etc/fstab: OK (Updated)
+Common subdirectories: /mnt/kanat-root/rootfs/boot.backup/grub and /mnt/kanat-root/rootfs/boot/grub
+Common subdirectories: /mnt/kanat-root/rootfs/boot.backup/lost+found and /mnt/kanat-root/rootfs/boot/lost+found
+Contents of /mnt/kanat-root/rootfs/boot has not been changed. 
+WARNING: We should have compared the etc/default/grub** contents!
+Skipping GRUB installation. (Use "--force-grub-install" if necessary.)
+
+All done.
+ceremcem@erik3:kanat$ ./test-in-virtualbox.sh 
+Detaching kanat...
+Unmounting /mnt/kanat-root
+Deactivating LVM volume: /dev/mapper/kanat-root
+Deactivating LVM volume: /dev/mapper/kanat-swap
+Closing kanat_crypt: OK
+Removing /mnt/kanat-root directory
+kanat is detached.
+Waiting for VM "kanat-testing" to power on...
+VM "kanat-testing" has been successfully started.
+```
+
 # Description 
 
 This is the backup toolset I'm currently using on my laptop. My hard disk configurations reside inside the `./targets/*` folders. There are 3 hard disks I'm using: 

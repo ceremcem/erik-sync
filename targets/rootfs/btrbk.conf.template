@@ -1,7 +1,7 @@
 timestamp_format        long
 
-snapshot_preserve_min   6h
-snapshot_preserve       2d 1w
+snapshot_preserve_min   12h
+snapshot_preserve       1d 1w
 
 snapshot_dir           snapshots/erik3
 

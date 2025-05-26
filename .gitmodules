@@ -28,3 +28,9 @@
 [submodule "targets/zencefil"]
 	path = targets/zencefil
 	url = git@github.com:ceremcem/smith-sync-new-target
+[submodule "targets/peynir"]
+	path = targets/peynir
+	url = git@github.com:ceremcem/smith-sync-new-target
+[submodule "targets/sandisk"]
+	path = targets/sandisk
+	url = git@github.com:ceremcem/smith-sync-new-target

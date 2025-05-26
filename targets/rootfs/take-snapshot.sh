@@ -41,6 +41,31 @@ delete_snapshot_vms(){
     done
 }
 
+pause_vms(){
+    if ! timeout 5 VBoxManage list runningvms > /dev/null; then
+        popup_persistent "Pausing running VMs failed. (VMs can not be listed)"
+        return
+    fi
+    tmp=/tmp/currently-running-vms.txt
+    VBoxManage list runningvms | awk -F'"' '{print $2}' | grep -v testing > $tmp
+     readarray -t running_vms < $tmp
+    for vm in "${running_vms[@]}"; do
+        [[ -z "$vm" ]] && continue
+        echo "Pausing: $vm"
+        VBoxManage controlvm "$vm" pause || true
+    done
+}
+
+resume_vms(){
+    tmp=/tmp/currently-running-vms.txt
+    readarray -t running_vms < $tmp
+    for vm in "${running_vms[@]}"; do
+        [[ -z "$vm" ]] && continue
+        echo "Resuming: $vm"
+        VBoxManage controlvm "$vm" resume
+    done
+}
+
 mkdir -p $_sdir/exclude
 
 # All checks are done, run as root.
@@ -131,13 +156,19 @@ echo "Backup boot partition contents"
 [[ $action == "dryrun" ]] || rsync -avP --delete /boot/ /boot.backup/
 
 # Save running virtual machine states
-sudo -u $SUDO_USER bash -c "$(declare -f take_snapshot_vms); take_snapshot_vms"
+# THIS POSSIBLY COUSES "INACCESSIBLE DIFFERENCING DISKS" error
+# Hence disabled the deletion process
+#sudo -u $SUDO_USER bash -c "$(declare -f take_snapshot_vms); take_snapshot_vms"
+sudo -u $SUDO_USER bash -c "$(declare -f pause_vms); pause_vms"
 
 ../../smith-sync/btrbk -c $conf.calculated --progress $action "${btrbk_args[@]}"
 [[ "$action" == "run" ]] && \
     echo $EPOCHSECONDS > /tmp/take-snapshot.last-run.txt
 
-sudo -u $SUDO_USER bash -c "$(declare -f delete_snapshot_vms); delete_snapshot_vms"
+# Disabled the following. See bove explanation.
+#sudo -u $SUDO_USER bash -c "$(declare -f delete_snapshot_vms); delete_snapshot_vms"
+sudo -u $SUDO_USER bash -c "$(declare -f resume_vms); resume_vms"
+
 
 . $_sdir/backup-status.sh
 echo
